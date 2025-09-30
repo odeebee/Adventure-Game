@@ -13,6 +13,14 @@ table.insert(chars, Ogrish)
 local tween = require "tween"
 local t1
 
+displayTable = {}
+displayTimerTable = {}
+displayIndex = 1
+displayTimer = 0
+displayIterations = 0
+
+TIMER = 0
+
 dialogeDisplayText = ""
 
 function love.load()
@@ -27,6 +35,12 @@ function love.update(dt)
     end
 
     updateCharsBoundaries()
+
+    TIMER = TIMER + dt
+    if TIMER > 0.1 then
+        TIMER = 0
+        tick()
+    end
 end
 
 function love.draw()
@@ -47,7 +61,8 @@ function love.keypressed(key)
         for i=1,#chars do
             if chars[i].displaySpeechIndicator == true then
                 if chars[i].dialogeIndex == 1 then
-                    dialogeDisplayText = chars[i].dialoge[chars[i].dialogeIndex]
+                    --dialogeDisplayText = chars[i].dialoge[chars[i].dialogeIndex]
+                    updateDialogeText(chars[i].dialoge[chars[i].dialogeIndex])
                 end
             end
         end
@@ -90,6 +105,39 @@ function updateCharsBoundaries()
     for i=1,#chars do
         if chars[i].location == levelNames[levelIndex] then
             chars[i].boundaryChecker()
+        end
+    end
+end
+
+function tick()
+    --A tick is every 0.l seconds
+    updateDialogeTable()
+end
+
+function updateDialogeText(dialogeToDisplay)
+    print(dialogeToDisplay)
+    for str in string.gmatch(dialogeToDisplay, "([^".."%s".."]+)") do 
+        table.insert(displayTable,str)
+    end
+
+    for i=1,#displayTable do
+        table.insert(displayTimerTable,#displayTable[i])
+    end
+    displayTimerTable[1] = 1 -- sets the first words timer to 1, this just makes sure the first word displays instantly
+end
+
+function updateDialogeTable()
+    love.graphics.print(dialogeDisplayText)
+    if #displayTable > 0 and displayIterations < #displayTable-1 then
+        if displayTimer == 0 then
+            dialogeDisplayText = dialogeDisplayText .. displayTable[displayIndex] .. " "
+            displayIndex = displayIndex + 1
+            displayTimer = displayTimerTable[displayIndex]
+            displayIterations = displayIterations + 1
+            print(displayTable[displayIndex],displayIterations,#displayTable)
+        end
+        if displayTimer > 0 then
+            displayTimer = displayTimer - 1
         end
     end
 end

@@ -11,11 +11,12 @@ Ogrish = {
     height = 75,
     knownName = "???",
     name = "Ogrish",
-    dialoge = {"Welcome detective, i'm glad you are here.",
-                "My name is Ogrish. I am the harbour master here.",
-                "You should start thinking about finding a place to stay.",
-                "Theres a motel just down the road",
-                "Travel safe detective."},
+    --for now write the last word twice, kind of a shitty workaround but idk
+    dialoge = {"Welcome detective, i'm glad you are here. here.",
+                "My name is Ogrish. I am the harbour master here. here.",
+                "You should start thinking about finding a place to stay. stay.",
+                "Theres a motel just down the road road",
+                "Travel safe detective. detective."},
     dialogeIndex = 1,
     
     boundaryChecker = function()
@@ -24,6 +25,8 @@ Ogrish = {
             Ogrish.displaySpeechIndicator = true
         else
             Ogrish.displaySpeechIndicator = false
+            Ogrish.dialogeIndex = 1
+            --dialogeDisplayText = ""
         end
     end,
 
