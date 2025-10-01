@@ -3,6 +3,7 @@ require "levels"
 require "singleton"
 require "player"
 require "helperFuncs"
+require "levelMover"
 
 --Characters
 require ("Characters.Ogrish")
@@ -18,6 +19,8 @@ displayTimerTable = {}
 displayIndex = 1
 displayTimer = 0
 displayIterations = 0
+firstLineDisplayed = false
+displayLineFinished = true
 
 TIMER = 0
 
@@ -35,9 +38,10 @@ function love.update(dt)
     end
 
     updateCharsBoundaries()
+    levelMoveBoundaryCheck(dt)
 
     TIMER = TIMER + dt
-    if TIMER > 0.1 then
+    if TIMER > tickTime then
         TIMER = 0
         tick()
     end
@@ -48,6 +52,7 @@ function love.draw()
     drawLevels()
     drawCharacters()
     drawDialogeText()
+    drawGradient()
 end
 
 function love.mousepressed(x,y,button,istouch,presses)
@@ -59,11 +64,26 @@ end
 function love.keypressed(key)
     if key == "x" then
         for i=1,#chars do
-            if chars[i].displaySpeechIndicator == true then
-                if chars[i].dialogeIndex == 1 then
+
+            local characterDialogeTable = chars[i].dialoge
+            if dialogeDisplayText == "" and (chars[i].dialogeIndex == #characterDialogeTable) then
+                chars[i].dialogeIndex = 1
+            end
+
+            if chars[i].displaySpeechIndicator == true and (chars[i].dialogeIndex < #characterDialogeTable) and displayLineFinished == true then
+                displayLineFinished = false
+                print(chars[i].dialogeIndex,#characterDialogeTable-1)
+                if chars[i].dialogeIndex == 1 and firstLineDisplayed == false then
                     --dialogeDisplayText = chars[i].dialoge[chars[i].dialogeIndex]
                     updateDialogeText(chars[i].dialoge[chars[i].dialogeIndex])
+                else
+                    chars[i].dialogeIndex = chars[i].dialogeIndex + 1
+                    updateDialogeText(chars[i].dialoge[chars[i].dialogeIndex])
                 end
+            end
+            if chars[i].displaySpeechIndicator == true and (chars[i].dialogeIndex == #characterDialogeTable) then
+                --chars[i].dialogeIndex = 1
+                dialogeDisplayText=""
             end
         end
     end
@@ -115,6 +135,8 @@ function tick()
 end
 
 function updateDialogeText(dialogeToDisplay)
+    dialogeDisplayText = ""
+    print("Updated Dialoge Text")
     print(dialogeToDisplay)
     for str in string.gmatch(dialogeToDisplay, "([^".."%s".."]+)") do 
         table.insert(displayTable,str)
@@ -134,10 +156,21 @@ function updateDialogeTable()
             displayIndex = displayIndex + 1
             displayTimer = displayTimerTable[displayIndex]
             displayIterations = displayIterations + 1
-            print(displayTable[displayIndex],displayIterations,#displayTable)
         end
         if displayTimer > 0 then
             displayTimer = displayTimer - 1
         end
     end
+
+    if displayIterations == #displayTable-1 and firstLineDisplayed == false then
+        print("FINISHED")
+        displayLineFinished = true
+        firstLineDisplayed = true
+    end
+
+    if displayIterations == #displayTable-1 and displayLineFinished == false then
+        print("FINISHED AFTER FIRST LINE")
+        displayLineFinished = true
+    end
+
 end

@@ -1,7 +1,13 @@
 levelIndex = 1
 
 levelNames = {
-    "Docks"
+    "Docks",
+    "The old town"
+}
+
+canLevelBeExitedFromSides = {
+    true,
+    true
 }
 
 levelFloorLevels = {
