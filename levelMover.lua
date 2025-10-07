@@ -1,6 +1,8 @@
 require "levels"
 require "player"
 require "conf"
+require "helperFuncs"
+
 
 local tween = require "tween"
 
@@ -20,18 +22,28 @@ aplhaVarsR={
     alpha=0
 }
 
+function moveLevel()
+    if displayRight == true then
+        levelIndex = levelIndex + 1
+        --this is such a copout lol but idk
+        player.speed=9999999
+        movePlayer(0)
+        player.speed = player.bspeed
+    end
+end
+
 function levelMoveBoundaryCheck(dt)
     if t2 then
         t2:update(dt)
     end
 
-    if player.xPosition > 0 and player.xPosition < 50 then
+    if player.xPosition > 0 and player.xPosition < 50  and levelIndex > 1 then
         displayLeft = true
     else
         displayLeft = false
     end
 
-    if player.xPosition < screenWidth and player.xPosition > screenWidth - 50 then
+    if player.xPosition < screenWidth and player.xPosition > screenWidth - 50 and levelIndex < #levelNames then
         displayRight = true
     else
         displayRight = false

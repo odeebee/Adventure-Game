@@ -1,6 +1,7 @@
 player = {
     xPosition = 0,
-    speed = 75
+    speed = 150,
+    bspeed = 150
 }
 
 function drawPlayer()

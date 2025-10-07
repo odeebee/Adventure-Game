@@ -87,6 +87,11 @@ function love.keypressed(key)
             end
         end
     end
+
+    if key == "space" then
+        --print("Space")
+        moveLevel()
+    end
 end
 
 function drawCharacters()
