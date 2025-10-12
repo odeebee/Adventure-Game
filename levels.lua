@@ -1,8 +1,10 @@
-levelIndex = 1
+levelIndex = 4
 
 levelNames = {
     "Docks",
-    "The old town"
+    "The old town",
+    "The backstreets",
+    "The motel"
 }
 
 canLevelBeExitedFromSides = {
@@ -11,5 +13,8 @@ canLevelBeExitedFromSides = {
 }
 
 levelFloorLevels = {
+    600,
+    600,
+    600,
     600
 }

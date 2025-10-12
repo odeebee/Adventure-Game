@@ -1,0 +1,4 @@
+clock = {
+    tick = function()
+    end
+}

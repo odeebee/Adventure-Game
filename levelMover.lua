@@ -8,6 +8,7 @@ local tween = require "tween"
 
 displayLeft = true
 displayRight = true
+display = false
 
 displayWidth = 35
 aplhaValue = 0.5
@@ -30,6 +31,13 @@ function moveLevel()
         movePlayer(0)
         player.speed = player.bspeed
     end
+
+    if displayLeft == true then
+        levelIndex = levelIndex - 1
+        player.speed=9999999
+        movePlayer(screenWidth-25)
+        player.speed = player.bspeed
+    end
 end
 
 function levelMoveBoundaryCheck(dt)
@@ -39,14 +47,18 @@ function levelMoveBoundaryCheck(dt)
 
     if player.xPosition > 0 and player.xPosition < 50  and levelIndex > 1 then
         displayLeft = true
+        display = true
     else
         displayLeft = false
+        display = false
     end
 
     if player.xPosition < screenWidth and player.xPosition > screenWidth - 50 and levelIndex < #levelNames then
         displayRight = true
+        display = true
     else
         displayRight = false
+        display = false
     end
 end
 

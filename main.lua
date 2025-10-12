@@ -4,12 +4,15 @@ require "singleton"
 require "player"
 require "helperFuncs"
 require "levelMover"
+require "Ui"
 
 --Characters
 require ("Characters.Ogrish")
+require ("Characters.Vernon")
 
 chars = {}
 table.insert(chars, Ogrish)
+table.insert(chars, Vernon)
 
 local tween = require "tween"
 local t1
@@ -28,11 +31,16 @@ dialogeDisplayText = ""
 
 function love.load()
     love.window.setMode(screenWidth,screenHeight)
-    levelIndex = 1 --Docks
+    levelIndex = 4 --Motel
     floorlevel = levelFloorLevels[levelIndex]
+    for i=1,#chars do
+        chars[i].onLoad()
+    end
 end
 
 function love.update(dt)
+    --Ui.update()
+
     if t1 then
         t1:update(dt)
     end
@@ -48,15 +56,16 @@ function love.update(dt)
 end
 
 function love.draw()
-    drawPlayer()
+    Ui.drawUi()
     drawLevels()
     drawCharacters()
     drawDialogeText()
     drawGradient()
+    drawPlayer()
 end
 
 function love.mousepressed(x,y,button,istouch,presses)
-    if button == 1 then
+    if button == 1 and Ui.isMouseOverUi(x,y) == false then
         movePlayer(x)
     end
 end
@@ -107,10 +116,18 @@ function drawLevels()
     if levelIndex == 1 then
         drawDocks()
     end
+
+    if levelIndex == 4 then
+        drawMotel()
+    end
+end
+
+function drawMotel()
+    love.graphics.line(0,floorlevel,screenWidth,floorlevel)
 end
 
 function drawDocks()
-    love.graphics.setColor(255,255,255)
+    --love.graphics.setColor(255,255,255)
     love.graphics.line(0,floorlevel,screenWidth,floorlevel)
 end
 
@@ -137,6 +154,11 @@ end
 function tick()
     --A tick is every 0.l seconds
     updateDialogeTable()
+    for i=1,#chars do
+        if chars[i].canDraw == true then
+            chars[i].updateSprite()
+        end
+    end
 end
 
 function updateDialogeText(dialogeToDisplay)
