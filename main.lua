@@ -5,6 +5,7 @@ require "player"
 require "helperFuncs"
 require "levelMover"
 require "Ui"
+require "inventory"
 
 --Characters
 require ("Characters.Ogrish")
@@ -31,7 +32,7 @@ dialogeDisplayText = ""
 
 function love.load()
     love.window.setMode(screenWidth,screenHeight)
-    levelIndex = 4 --Motel
+    levelIndex = 1 --Motel
     floorlevel = levelFloorLevels[levelIndex]
     for i=1,#chars do
         chars[i].onLoad()
@@ -56,17 +57,23 @@ function love.update(dt)
 end
 
 function love.draw()
-    Ui.drawUi()
     drawLevels()
     drawCharacters()
     drawDialogeText()
     drawGradient()
     drawPlayer()
+    Ui.drawUi()
+    Inventory.displayAllItems()
+    --front
 end
 
 function love.mousepressed(x,y,button,istouch,presses)
-    if button == 1 and Ui.isMouseOverUi(x,y) == false then
+    if button == 1 and Ui.isMouseOverUi(x,y) == false and Inventory.inventoryOpen == false then
         movePlayer(x)
+    end
+
+    if button == 1 and Ui.isMouseOverUi(x,y) == true then
+        Inventory.showInventory()
     end
 end
 
