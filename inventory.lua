@@ -1,7 +1,7 @@
 Inventory = {
     inventoryOpen = false,
 
-    list = {"Test1","Test2","Test3","Test4","Test5","Test6","Test7"},
+    list = {},
 
     showInventory = function()
         if Inventory.inventoryOpen == false then
@@ -19,7 +19,14 @@ Inventory = {
             dummy = 0
             for i=1,#Inventory.list do
                 --love.graphics.setColor(255,0,0)
-                love.graphics.rectangle("fill",Inventory.iconStartPosX+dummy,Inventory.iconStartPosY,50,50)
+                --love.graphics.rectangle("fill",Inventory.iconStartPosX+dummy,Inventory.iconStartPosY,50,50)
+                for j=1,#items do
+                    if items[j].name == Inventory.list[i] then
+                        love.graphics.draw(items[j].icon,Inventory.iconStartPosX+dummy,Inventory.iconStartPosY)
+                    else
+                        love.graphics.rectangle("fill",Inventory.iconStartPosX+dummy,Inventory.iconStartPosY,50,50)
+                    end
+                end
                 dummy = dummy + 60
             end
         end

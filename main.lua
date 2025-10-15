@@ -6,6 +6,7 @@ require "helperFuncs"
 require "levelMover"
 require "Ui"
 require "inventory"
+require "Items.ElevatorInstructions"
 
 --Characters
 require ("Characters.Ogrish")
@@ -14,6 +15,9 @@ require ("Characters.Vernon")
 chars = {}
 table.insert(chars, Ogrish)
 table.insert(chars, Vernon)
+
+items = {}
+table.insert(items, ElevatorInstructions)
 
 local tween = require "tween"
 local t1
@@ -32,7 +36,9 @@ dialogeDisplayText = ""
 
 function love.load()
     love.window.setMode(screenWidth,screenHeight)
-    levelIndex = 1 --Motel
+    -- 1 = Docks
+    -- 4 = Motel
+    levelIndex = 4
     floorlevel = levelFloorLevels[levelIndex]
     for i=1,#chars do
         chars[i].onLoad()
@@ -80,7 +86,6 @@ end
 function love.keypressed(key)
     if key == "x" then
         for i=1,#chars do
-
             local characterDialogeTable = chars[i].dialoge
             if dialogeDisplayText == "" and (chars[i].dialogeIndex == #characterDialogeTable) then
                 chars[i].dialogeIndex = 1
@@ -102,6 +107,15 @@ function love.keypressed(key)
                 dialogeDisplayText=""
             end
         end
+
+        --seperate for loop, messy in practice but it looks clean
+        --this is for checking for character interaction and if we can call the functions
+        for i=1,#chars do
+            if chars[i].displaySpeechIndicator == true and chars[i].canDraw == true and chars[i].interacted == false then
+                chars[i].interaction()
+            end
+        end
+                
     end
 
     if key == "space" then
